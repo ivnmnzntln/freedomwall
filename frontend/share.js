@@ -15,7 +15,14 @@ async function submitPost(post) {
     });
 
     if (!response.ok) {
-        throw new Error('Failed to post message.');
+        let details = '';
+        try {
+            const errorBody = await response.json();
+            details = errorBody?.error ? ` (${errorBody.error})` : '';
+        } catch (error) {
+            details = '';
+        }
+        throw new Error(`Failed to post message${details}`);
     }
 
     const data = await response.json();
@@ -42,6 +49,6 @@ document.getElementById('messageForm').addEventListener('submit', async (event) 
         const redirectId = createdPost?.id ? encodeURIComponent(createdPost.id) : '';
         window.location.href = redirectId ? `./confirm.html?new=${redirectId}` : './confirm.html';
     } catch (error) {
-        alert('Unable to post right now. Please try again.');
+        alert(error.message || 'Unable to post right now. Please try again.');
     }
 });

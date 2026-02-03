@@ -47,10 +47,14 @@ exports.handler = async (event) => {
             supports: 0
         };
 
-        await updateStore((store) => {
-            store.posts = store.posts || [];
-            store.posts.push(post);
-        });
+        try {
+            await updateStore((store) => {
+                store.posts = store.posts || [];
+                store.posts.push(post);
+            });
+        } catch (error) {
+            return buildResponse(500, { error: 'Storage update failed.' });
+        }
 
         return buildResponse(201, { post });
     }
