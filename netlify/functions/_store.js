@@ -1,6 +1,6 @@
 const fs = require('fs/promises');
 const path = require('path');
-const { getStore: getBlobStore } = require('@netlify/blobs');
+let getBlobStoreModule = null;
 
 const STORE_NAME = 'speakup-store';
 const POSTS_KEY = 'posts';
@@ -16,8 +16,12 @@ async function getBlobClientSafe() {
     }
 
     try {
+        if (!getBlobStoreModule) {
+            const mod = await import('@netlify/blobs');
+            getBlobStoreModule = mod.getStore;
+        }
         if (!blobStoreCache) {
-            blobStoreCache = getBlobStore(STORE_NAME);
+            blobStoreCache = getBlobStoreModule(STORE_NAME);
         }
         blobAvailable = true;
         return blobStoreCache;
