@@ -119,7 +119,14 @@ async function supportPost(id) {
     });
 
     if (!response.ok) {
-        throw new Error('Failed to support message.');
+        let details = '';
+        try {
+            const errorBody = await response.json();
+            details = errorBody?.error ? ` (${errorBody.error})` : '';
+        } catch (error) {
+            details = '';
+        }
+        throw new Error(`Failed to support message${details}`);
     }
 }
 
@@ -142,7 +149,7 @@ wall.addEventListener('click', async (event) => {
             localStorage.setItem(supportedKey, JSON.stringify([...supportedPosts]));
             await loadPosts();
         } catch (error) {
-            alert('Unable to add support right now. Please try again.');
+            alert(error.message || 'Unable to add support right now. Please try again.');
         }
         return;
     }

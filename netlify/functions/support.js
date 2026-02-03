@@ -35,15 +35,19 @@ exports.handler = async (event) => {
     }
 
     let updatedPost = null;
-    await updateStore((store) => {
-        store.posts = store.posts || [];
-        const post = store.posts.find((entry) => entry.id === id);
-        if (!post) {
-            return;
-        }
-        post.supports = (post.supports || 0) + 1;
-        updatedPost = post;
-    });
+    try {
+        await updateStore((store) => {
+            store.posts = store.posts || [];
+            const post = store.posts.find((entry) => entry.id === id);
+            if (!post) {
+                return;
+            }
+            post.supports = (post.supports || 0) + 1;
+            updatedPost = post;
+        });
+    } catch (error) {
+        return buildResponse(500, { error: 'Storage update failed.' });
+    }
 
     if (!updatedPost) {
         return buildResponse(404, { error: 'Post not found.' });
