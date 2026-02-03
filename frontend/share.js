@@ -20,9 +20,14 @@ async function submitPost(post) {
             const errorBody = await response.json();
             details = errorBody?.error ? ` (${errorBody.error})` : '';
         } catch (error) {
-            details = '';
+            try {
+                const textBody = await response.text();
+                details = textBody ? ` (${textBody.slice(0, 140)})` : '';
+            } catch (textError) {
+                details = '';
+            }
         }
-        throw new Error(`Failed to post message${details}`);
+        throw new Error(`Failed to post message${details} [${response.status}]`);
     }
 
     const data = await response.json();

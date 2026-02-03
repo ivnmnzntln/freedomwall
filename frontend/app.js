@@ -124,9 +124,14 @@ async function supportPost(id) {
             const errorBody = await response.json();
             details = errorBody?.error ? ` (${errorBody.error})` : '';
         } catch (error) {
-            details = '';
+            try {
+                const textBody = await response.text();
+                details = textBody ? ` (${textBody.slice(0, 140)})` : '';
+            } catch (textError) {
+                details = '';
+            }
         }
-        throw new Error(`Failed to support message${details}`);
+        throw new Error(`Failed to support message${details} [${response.status}]`);
     }
 }
 
