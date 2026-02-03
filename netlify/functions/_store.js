@@ -1,39 +1,28 @@
-const fs = require('fs/promises');
-const path = require('path');
+const { getStore: getBlobStore } = require('@netlify/blobs');
 
-const STORE_PATH = path.join('/tmp', 'speakup-store.json');
+const STORE_NAME = 'speakup-store';
+const POSTS_KEY = 'posts';
 
 let cachedStore = null;
 
-async function loadFromDisk() {
-    try {
-        const raw = await fs.readFile(STORE_PATH, 'utf-8');
-        return JSON.parse(raw);
-    } catch (error) {
-        return { posts: [] };
+async function getBlobClient() {
+    if (!cachedStore) {
+        cachedStore = getBlobStore(STORE_NAME);
     }
-}
-
-async function saveToDisk(store) {
-    try {
-        await fs.writeFile(STORE_PATH, JSON.stringify(store, null, 2));
-    } catch (error) {
-        // Ignore disk errors in serverless environments.
-    }
+    return cachedStore;
 }
 
 async function getStore() {
-    if (cachedStore) {
-        return cachedStore;
-    }
-    cachedStore = await loadFromDisk();
-    return cachedStore;
+    const store = await getBlobClient();
+    const posts = await store.get(POSTS_KEY, { type: 'json' });
+    return { posts: posts || [] };
 }
 
 async function updateStore(updater) {
     const store = await getStore();
     await updater(store);
-    await saveToDisk(store);
+    const blobStore = await getBlobClient();
+    await blobStore.set(POSTS_KEY, store.posts || []);
     return store;
 }
 
