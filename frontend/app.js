@@ -112,7 +112,7 @@ async function loadPosts() {
 }
 
 async function supportPost(id) {
-    const response = await fetch(`${apiBase}/support`, {
+    const response = await fetch(`${apiBase}/support-post`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id })

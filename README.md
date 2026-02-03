@@ -14,7 +14,7 @@ This project splits the SPEAK UP Freedom Wall into a static frontend and Netlify
 ## API
 - GET /.netlify/functions/posts: returns all posts.
 - POST /.netlify/functions/posts: creates a post.
-- POST /.netlify/functions/support: increments support for a post.
+- POST /.netlify/functions/support-post: increments support for a post.
 
 ## Admin dashboard
 - Open /admin.html for moderation.
