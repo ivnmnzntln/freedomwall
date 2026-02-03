@@ -22,5 +22,5 @@ This project splits the SPEAK UP Freedom Wall into a static frontend and Netlify
 - Use the same token in the admin dashboard to load and delete posts.
 
 ## Notes
-- Data is stored using Netlify Blobs for cross-function persistence.
+- Data is stored using Netlify Blobs when available, with a /tmp fallback.
 - For long-term scale, connect a database (e.g., Supabase or Airtable).
