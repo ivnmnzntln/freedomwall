@@ -5,30 +5,20 @@ let getBlobStoreModule = null;
 const STORE_NAME = 'speakup-store';
 const POSTS_KEY = 'posts';
 const STORE_PATH = path.join('/tmp', 'speakup-store.json');
+const allowFallback = process.env.NETLIFY_LOCAL === 'true' || !process.env.NETLIFY;
 
 let blobStoreCache = null;
-let blobAvailable = null;
 let memoryStore = { posts: [] };
 
-async function getBlobClientSafe() {
-    if (blobAvailable === false) {
-        return null;
+async function getBlobClient() {
+    if (!getBlobStoreModule) {
+        const mod = await import('@netlify/blobs');
+        getBlobStoreModule = mod.getStore;
     }
-
-    try {
-        if (!getBlobStoreModule) {
-            const mod = await import('@netlify/blobs');
-            getBlobStoreModule = mod.getStore;
-        }
-        if (!blobStoreCache) {
-            blobStoreCache = getBlobStoreModule(STORE_NAME);
-        }
-        blobAvailable = true;
-        return blobStoreCache;
-    } catch (error) {
-        blobAvailable = false;
-        return null;
+    if (!blobStoreCache) {
+        blobStoreCache = getBlobStoreModule(STORE_NAME);
     }
+    return blobStoreCache;
 }
 
 async function loadFileStore() {
@@ -51,35 +41,33 @@ async function saveFileStore(store) {
 }
 
 async function getStore() {
-    const blobStore = await getBlobClientSafe();
-    if (blobStore) {
-        try {
-            const posts = await blobStore.get(POSTS_KEY, { type: 'json' });
-            return { posts: posts || [] };
-        } catch (error) {
-            // Fall back to file store.
+    try {
+        const blobStore = await getBlobClient();
+        const posts = await blobStore.get(POSTS_KEY, { type: 'json' });
+        return { posts: posts || [] };
+    } catch (error) {
+        if (allowFallback) {
+            return loadFileStore();
         }
+        throw error;
     }
-
-    return loadFileStore();
 }
 
 async function updateStore(updater) {
     const store = await getStore();
     await updater(store);
 
-    const blobStore = await getBlobClientSafe();
-    if (blobStore) {
-        try {
-            await blobStore.set(POSTS_KEY, store.posts || []);
+    try {
+        const blobStore = await getBlobClient();
+        await blobStore.set(POSTS_KEY, store.posts || []);
+        return store;
+    } catch (error) {
+        if (allowFallback) {
+            await saveFileStore(store);
             return store;
-        } catch (error) {
-            // Fall back to file store.
         }
+        throw error;
     }
-
-    await saveFileStore(store);
-    return store;
 }
 
 module.exports = {
