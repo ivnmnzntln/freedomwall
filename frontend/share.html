@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Share Your Story - SPEAK UP</title>
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗣️ SPEAK UP</h1>
+            <p>Share Your Story</p>
+            <p class="header-tagline">Your voice matters. You are not alone.</p>
+            <div class="header-actions">
+                <a class="action-link" href="./index.html">← Back to Wall</a>
+                <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false">Dark mode</button>
+            </div>
+        </div>
+
+        <div class="post-form">
+            <h2 class="form-title">
+                <span>✍️</span>
+                <span>Share Your Story</span>
+            </h2>
+            <form id="messageForm">
+                <div class="form-group">
+                    <label for="category">🏷️ Category *</label>
+                    <select id="category" required>
+                        <option value="">Select a category...</option>
+                        <option value="Gender Equality">Gender Equality</option>
+                        <option value="Women's Rights">Women's Rights</option>
+                        <option value="LGBTQIA+ Advocacy">LGBTQIA+ Advocacy</option>
+                        <option value="Workplace Discrimination">Workplace Discrimination</option>
+                        <option value="Sexual Harassment">Sexual Harassment</option>
+                        <option value="Gender-Based Violence">Gender-Based Violence</option>
+                        <option value="Personal Story">Personal Story</option>
+                        <option value="Call to Action">Call to Action</option>
+                        <option value="Resources & Support">Resources & Support</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="triggerWarning">⚠️ Trigger Warning (if applicable)</label>
+                    <select id="triggerWarning">
+                        <option value="">None</option>
+                        <option value="Sexual Assault/Abuse">Sexual Assault/Abuse</option>
+                        <option value="Domestic Violence">Domestic Violence</option>
+                        <option value="Self-Harm">Self-Harm</option>
+                        <option value="Eating Disorders">Eating Disorders</option>
+                        <option value="Transphobia/Homophobia">Transphobia/Homophobia</option>
+                        <option value="Graphic Violence">Graphic Violence</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">💬 Your Message * (Share your thoughts, experiences, or advocacy)</label>
+                    <textarea id="message" placeholder="Your voice matters. Share your story safely..." required maxlength="1000"></textarea>
+                    <div class="char-count">
+                        <span id="charCount">0</span>/1000 characters
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="author">👤 Name (Optional - leave blank to post anonymously)</label>
+                    <input type="text" id="author" placeholder="Anonymous" />
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="guidelines" required />
+                    <label for="guidelines" class="checkbox-label">I agree to share respectfully and follow community guidelines</label>
+                </div>
+
+                <button type="submit" class="submit-btn">📤 Post to Wall</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="./theme.js"></script>
+    <script src="./share.js"></script>
+</body>
+</html>

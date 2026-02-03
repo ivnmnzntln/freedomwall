@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - SPEAK UP</title>
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Admin Dashboard</h1>
+            <p>Moderate posts and keep the wall safe.</p>
+            <div class="header-actions">
+                <a class="action-link" href="./index.html">View Wall</a>
+                <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false">Dark mode</button>
+            </div>
+        </div>
+
+        <div class="post-form admin-panel">
+            <h2 class="form-title">
+                <span>🔐</span>
+                <span>Admin Access</span>
+            </h2>
+            <div class="form-group">
+                <label for="adminToken">Admin Token</label>
+                <input id="adminToken" type="password" placeholder="Enter admin token" />
+            </div>
+            <div class="header-actions admin-actions">
+                <button class="submit-btn" type="button" id="saveToken">Unlock Dashboard</button>
+            </div>
+            <p class="confirmation-note" id="adminStatus"></p>
+        </div>
+
+        <div class="post-form admin-panel">
+            <div class="admin-header">
+                <h2 class="form-title">
+                    <span>🧾</span>
+                    <span>Posts Queue</span>
+                </h2>
+                <button class="support-btn" type="button" id="refreshPosts">Refresh</button>
+            </div>
+            <div class="admin-table" id="adminTable">
+                <div class="empty-wall">No posts loaded. Unlock and refresh.</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./theme.js"></script>
+    <script src="./admin.js"></script>
+</body>
+</html>
