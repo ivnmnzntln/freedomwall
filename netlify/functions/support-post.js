@@ -37,10 +37,12 @@ exports.handler = async (event) => {
     }
 
     let updatedPost = null;
+    let knownIds = [];
     try {
         await updateStore((store) => {
             store.posts = store.posts || [];
-            const post = store.posts.find((entry) => entry.id === id);
+            knownIds = store.posts.map((entry) => entry.id).slice(0, 5);
+            const post = store.posts.find((entry) => String(entry.id) === String(id));
             if (!post) {
                 return;
             }
@@ -52,7 +54,11 @@ exports.handler = async (event) => {
     }
 
     if (!updatedPost) {
-        return buildResponse(404, { error: 'Post not found.' });
+        return buildResponse(404, {
+            error: 'Post not found.',
+            count: knownIds.length,
+            sampleIds: knownIds
+        });
     }
 
     return buildResponse(200, { post: updatedPost });
