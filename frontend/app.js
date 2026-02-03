@@ -104,7 +104,7 @@ function focusNewPost() {
 }
 
 async function loadPosts() {
-    const response = await fetch(`${apiBase}/posts`);
+    const response = await fetch(`${apiBase}/posts`, { cache: 'no-store' });
     const data = await response.json();
     posts = data.posts || [];
     renderPosts();
